@@ -113,8 +113,7 @@ def statistics(request):
     L=[]
     l=[]
     cursor=connection.cursor()
-    button_save = Button(request.POST or None,prefix='button_save')
-    button_delete = Button(request.POST or None,prefix='button_delete')
+    button= Button(request.POST or None)
     errors={'a':0,'b':0,'c':0,'d':0,'e':0,'f':0,'g':0,'h':0,'i':0,'j':0,'k':0,'l':0,'m':0,'n':0,'o':0,'p':0,'q':0,'r':0,'s':0,'t':0,'u':0,'v':0,'w':0,'x':0,'y':0,'z':0}
     total_verbs = Verb.objects.filter(attempts=1).count()
     failed_attempts=0
@@ -132,21 +131,13 @@ def statistics(request):
         success_ratio=100
     for letter in errors:
         l.append((letter,errors[letter]))
-    if request.method == 'POST':
-        if 'Save score' in request.POST:
-            print(1)
-            if button_save.is_valid() and Error.objects.order_by('-attempts'):
-                print(2)
-                date=DateReport.objects.order_by('-date')[0].date+1
-                report=DateReport(success_ratio=success_ratio,date=date)
-                report.save()
-        elif 'Delete score' in request.POST:
-            print(3)
-            if button_delete.is_valid() :
-                print(4)
-                for p in Verb.objects.raw('SELECT id FROM blog_verb ORDER BY attempts DESC'):
-                    p.proposition=''
-                    p.attempts=0
-                    p.save()
-                cursor.execute('DELETE FROM blog_error')
+    if button.is_valid() and Error.objects.order_by('-attempts'):
+        date=DateReport.objects.order_by('-date')[0].date+1
+        report=DateReport(success_ratio=success_ratio,date=date)
+        report.save()
+        for p in Verb.objects.raw('SELECT id FROM blog_verb ORDER BY attempts DESC'):
+            p.proposition=''
+            p.attempts=0
+            p.save()
+        cursor.execute('DELETE FROM blog_error')
     return render(request, 'blog/statistics.html', locals())

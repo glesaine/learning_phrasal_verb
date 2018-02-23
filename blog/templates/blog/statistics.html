@@ -132,13 +132,8 @@ function renderBarChart(inputData,dom_element_to_append_to,yaxisLabel, colorSche
     <p>
     <form action= "/blog/statistics/" method="post">
       {% csrf_token %}
-      {{ button_save.as_p }}
-      <input type="submit" value="Save score" />
-    </form>
-    <form action= "/blog/statistics/" method="post">
-      {% csrf_token %}
-      {{ button_delete.as_p }}
-      <input type="submit" value="Delete score" />
+      {{ button.as_p }}
+      <input type="submit" value="Save score and delete" />
     </form>
   </div>
 
