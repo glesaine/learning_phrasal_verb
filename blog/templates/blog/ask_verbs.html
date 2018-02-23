@@ -1,0 +1,23 @@
+{% load staticfiles %}
+
+<!-- CSS Style //-->
+<link rel="stylesheet" type="text/css" href="{% static 'blog/css/style.css' %}" />
+
+<div id="title">
+  <h1> Test page </h1>
+</div>
+
+{% if finish %}
+<h2> You are done, go to statistics.{% else %} {{ meaning }} | {{ to_go }} to go </h2>
+<form action= "/blog/ask_verbs/{{number}}/{{meaning}}/" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Submit" />
+</form>
+{% endif %}
+<br>
+
+<h2>{{truth}} {% if truth %} | {{example}} {% else %} | {{ phrasal_verb}} {% endif %}</h2>
+
+In order to enter new verbs <a href="{% url 'enter_verbs' %}">Clic here</a><br>
+Done? Go go to statistics! <a href="{% url 'statistics' %}">Clic here</a><br>

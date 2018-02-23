@@ -1,0 +1,155 @@
+{% load staticfiles %}
+
+<!-- JavaScript Libraries //-->
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+<!-- CSS Style //-->
+<link rel="stylesheet" type="text/css" href="{% static 'blog/css/style.css' %}" />
+
+<!-- <script type="text/javascript" src="./main.js"></script> -->
+<link rel="stylesheet" type="text/js" href="{% static 'blog/js/main.js' %}" />
+
+
+<body>
+  <div id="title">
+    <h1> Statistics </h1>
+  </div>
+    <div id="chart">
+      <div class="title"> Errors in function of the starting letter </div>
+    </div>
+</body>
+<script>
+function renderBarChart(inputData,dom_element_to_append_to,yaxisLabel, colorScheme){
+
+    var margin = {top: 40, right: 40, bottom: 50, left: 50},
+    width = 800 - margin.left - margin.right,
+    height = 350 - margin.top - margin.bottom;
+
+    var formatPercent = d3.format(".0%");
+
+    var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+
+    var y = d3.scale.linear().range([height, 0]);
+
+    var color = d3.scale.ordinal()
+    .range(colorScheme);
+
+    var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+
+    var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .ticks(10);
+
+    var svg = d3.select(dom_element_to_append_to).append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+
+    inputData.forEach(function(d) {
+        d.label = d.label;
+        d.value = +d.value;
+    });
+
+    x.domain(inputData.map(function(d) { return d.label; }));
+    y.domain([0, d3.max(inputData, function(d) { return +d.value; })]);
+
+    svg.append("g")
+    .attr("class", "y axis")
+    .call(yAxis)
+    .append("text")
+    .attr("transform", "rotate(0)")
+    .attr("y", -35)
+    .attr("dy", "1.71em")
+    .attr("dx", ".29em")
+    .style("text-anchor", "end")
+    .text(yaxisLabel);
+
+    svg.append("g")
+    .attr("class", "x axis")
+    .call(xAxis)
+    .attr("transform",
+        "translate(" + 0 + "," + height + ")")
+
+    svg.selectAll("bar")
+    .data(inputData)
+    .enter().append("rect")
+    .attr("class", "bar")
+    .attr("x", function(d) { return x(d.label); })
+    .attr("width", x.rangeBand())
+    .attr("y", function(d) { return y(d.value); })
+    .attr("height", function(d) { return height - y(d.value); })
+    .attr('fill', function(d, i) {
+        return color(d.label);
+    });
+
+    var tooltip = d3.select(dom_element_to_append_to)
+    .append('div')
+    .attr('class', 'tooltip');
+
+    tooltip.append('div')
+    .attr('class', 'label');
+    tooltip.append('div')
+    .attr('class', 'value');
+
+    svg.selectAll(".bar")
+    .on('mouseover', function(d) {
+        tooltip.select('.label').html("<b> Label: " + d.label + "</b>");
+        tooltip.select('.value').html("<b> Value: " + d.value + "</b>");
+
+        tooltip.style('display', 'block');
+        tooltip.style('opacity',2);
+    })
+    .on('mousemove', function(d) {
+
+        tooltip.style('top', (d3.event.layerY + 10) + 'px')
+        .style('left', (d3.event.layerX - 25) + 'px');
+    })
+    .on('mouseout', function(d) {
+        tooltip.style('display', 'none');
+        tooltip.style('opacity',0);
+    });
+}
+</script>
+
+<div id="textarea">
+  <div id="text-left" class="textarea">
+    <h2>Past test errors are the following:</h2>
+    <body>{% for phrasal_verb,meaning,attempts in L %}
+        <li> {{ phrasal_verb }} | {{ meaning }} | {{ attempts }} </li>
+    {% endfor %}<body>
+  </div>
+  <div id="text-right" class="textarea">
+    <h2>{{failed_attempts}} errors </h2>
+    <h2>Success ratio: {{ success_ratio }} %</h2>
+    <body>Go to test <a href='/blog/ask_verbs/85/to accept a decision/'>Clic here</a><br>
+    In order to enter new verbs <a href="{% url 'enter_verbs' %}">Clic here</a><br>
+    To go home <a href='/blog/'>Clic here</a><br><body>
+    <p>
+    <form action= "/blog/statistics/" method="post">
+      {% csrf_token %}
+      {{ button_save.as_p }}
+      <input type="submit" value="Save score" />
+    </form>
+    <form action= "/blog/statistics/" method="post">
+      {% csrf_token %}
+      {{ button_delete.as_p }}
+      <input type="submit" value="Delete score" />
+    </form>
+  </div>
+
+</div>
+
+<script type="text/javascript">
+    var inputData = [{% for x,y in l %} {label: '{{x}}', value: {{y}}}, {% endfor %}];
+    var colorScheme = ["#E57373","#BA68C8","#7986CB","#A1887F","#90A4AE","#AED581","#9575CD","#FF8A65","#4DB6AC","#FFF176","#64B5F6","#00E676"];
+    renderBarChart(inputData,"#chart","Errors", colorScheme);
+</script>
+
+<!-- <div id="button">
+
+</div> -->

@@ -1,0 +1,150 @@
+{% load staticfiles %}
+
+<!-- CSS Style //-->
+<link rel="stylesheet" type="text/css" href="{% static 'blog/css/style.css' %}" />
+
+<script src="http://d3js.org/d3.v3.js"></script>
+
+
+
+<body>
+    <div id="title">
+      <h1> Bonjour ! </h1>
+    </div>
+    <div id="chart">
+      <div class="title"> Score des tests précédents </div>
+    </div>
+</body>
+
+<script>
+  function lineChart() {
+    var margin = {top: 40, right: 40, bottom: 50, left: 50},
+    width = 800 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom,
+    xValue = function(d) { return d.x; },
+    yValue = function(d) { return d.y; },
+    xScale = d3.scale.linear(),
+    yScale = d3.scale.linear(),
+    xAxis = d3.svg.axis().scale(xScale).orient("bottom").tickSize(6, 0),
+    yAxis = d3.svg.axis().scale(yScale).orient("left"),
+    line = d3.svg.line()
+      .x(function(d){return xScale(xValue(d))})
+      .y(function(d){return yScale(yValue(d))});
+
+    function chart(selection) {
+      selection.each(function(data) {
+
+        // Update the x-scale.
+        xScale
+            .domain(d3.extent(data, xValue))
+            .range([0, width]);
+
+        // Update the y-scale.
+        yScale
+            .domain([0, d3.max(data, yValue)])
+            .range([height, 0]);
+
+        // Enter svg
+        var svg = d3.select(this).selectAll("svg").data([data]),
+        gEnter = svg.enter().append("svg")
+  	.append("g")
+  	.classed("plot",true);
+
+        // Enter Axes
+        gEnter.append("g")
+  	.attr("class", "x axis")
+  	.attr("transform", "translate(0," + height + ")")
+  	.call(xAxis);
+
+        gEnter.append("g")
+  	.attr("class", "y axis")
+  	.call(yAxis)
+
+        //Enter line
+        gEnter.append("path")
+  	.datum(data)
+  	.classed("line",true)
+
+        // Update the outer dimensions.
+        svg.attr("width", width + margin.left + margin.right)
+  	.attr("height", height + margin.top + margin.bottom);
+
+        // Update the inner dimensions.
+        var g = svg.select("g.plot")
+  	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // Update the x-axis.
+        g.select(".x.axis")
+            .attr("transform", "translate(0," + yScale.range()[0] + ")")
+            .call(xAxis);
+
+        // Update the bars
+        g.selectAll("path.line")
+  	.attr("d", line);
+      });
+    }
+
+    chart.margin = function(_) {
+      if (!arguments.length) return margin;
+      margin = _;
+      return chart;
+    };
+
+    chart.width = function(_) {
+      if (!arguments.length) return width;
+      width = _;
+      return chart;
+    };
+
+    chart.height = function(_) {
+      if (!arguments.length) return height;
+      height = _;
+      return chart;
+    };
+
+    chart.x = function(_) {
+      if (!arguments.length) return xValue;
+      xValue = _;
+      return chart;
+    };
+
+    chart.y = function(_) {
+      if (!arguments.length) return yValue;
+      yValue = _;
+      return chart;
+    };
+
+    return chart;
+  }
+  </script>
+
+
+<body>
+<script type="text/javascript">
+  var data = [{% for x,y in l %} {x : {{x}}, y: {{y}}}, {% endfor %}],
+  lc = lineChart();
+  d3.select("body").datum(data)
+  .call(lc);
+</script>
+</body>
+<br>
+<body>
+  Ce site doit permettre d'apprendre les phrasal verbs anglais. <br>
+  Il est proposé d'entrer de nouveaux phrasal verbs ou de passer à la page de test.<br>
+  Une page de statistiques présentant les résultats du test est ensuite disponible.<br>
+</body>
+<p>
+
+{% if truth %} Le verbe ayant posé problème la dernière fois est : <br>
+<h2>{{phrasal_verb_to_learn}} | {{meaning_to_learn}} | {{example_to_learn}}</h2>{% endif %}
+
+<p>
+
+In order to enter new verbs <a href="{% url 'enter_verbs' %}">Clic here</a><br>
+Go to test <a href='/blog/ask_verbs/85/to accept a decision/'>Clic here</a><br>
+
+<form action= "/blog/" method="post">
+  {% csrf_token %}
+  {{ button_delete.as_p }}
+  <input type="submit" value="Delete records" />
+</form>

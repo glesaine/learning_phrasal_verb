@@ -1,0 +1,20 @@
+{% load staticfiles %}
+
+<!-- CSS Style //-->
+<link rel="stylesheet" type="text/css" href="{% static 'blog/css/style.css' %}" />
+
+<div id="title">
+  <h1> Enter new verb page </h1>
+</div>
+
+
+<form action="{% url "enter_verbs" %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit" />
+</form>
+
+<br>
+
+Go to test <a href='/blog/ask_verbs/85/to accept a decision'>Clic here</a><br>
+To go to statistics <a href="{% url 'statistics' %}">Clic here</a><br>
