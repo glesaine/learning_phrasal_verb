@@ -5,7 +5,7 @@ This repository is a Django blog designed to learn english phrasal verbs. The bl
 ### Prerequisites
 
 * [Python 3.6.3](https://www.python.org/downloads/)
-* [Django 2.0.2]
+* [Django 2.0.2]()
 ```
 pip install Django==2.0.2
 ```
