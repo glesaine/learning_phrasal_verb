@@ -4,8 +4,8 @@ This repository is a Django blog designed to learn english phrasal verbs. The bl
 
 ### Prerequisites
 
-[Python 3.6.3](https://www.python.org/downloads/)
-[Django 2.0.2]
+* [Python 3.6.3](https://www.python.org/downloads/)
+* [Django 2.0.2]
 ```
 pip install Django==2.0.2
 ```
@@ -18,7 +18,7 @@ You just have to download the repository.
 Once you are in the right directory.
 
 ```
-python3 manage.py runserver
+$ python3 manage.py runserver
 Performing system checks...
 
 System check identified no issues (0 silenced).
