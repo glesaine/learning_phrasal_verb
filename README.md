@@ -1,6 +1,7 @@
 # Learning phrasal verbs
 
-Django blog designed to learn english phrasal verbs. 
+This repository is a Django blog designed to learn english phrasal verbs. The blog also enables you enter additional phrasal verbs if need be. Ultimately, it gives you analytics to see the verbs that you need to learn in priority, as well as a dashboard showing your progress try after try.
+
 
 ## Getting Started
 
@@ -8,7 +9,7 @@ Django blog designed to learn english phrasal verbs.
 ### Prerequisites
 
 Python 3.6
-DjangoW
+Django
 
 ```
 Give examples
@@ -49,6 +50,4 @@ Add additional notes about how to deploy this on a live system
 
 ## Author
 
-* **Guillaume LESAINE** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+* **Guillaume LESAINE** - [LinkedIn](https://www.linkedin.com/in/guillaume-lesaine/)
