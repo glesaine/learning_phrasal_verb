@@ -11,11 +11,11 @@ pip install Django==2.0.2
 ```
 ### Installing
 
-You just have to download the repository.
+You just have to download the repository and the prerequisites.
 
 ## Running the tests
 
-Once you are in the right directory.
+Open your terminal, once you are in the right directory, type the following command:
 
 ```
 $ python3 manage.py runserver
@@ -30,9 +30,11 @@ Quit the server with CONTROL-C.
 
 You can then go to your navigator to this link: http://127.0.0.1:8000/blog/
 
-## Deployment
+## When you run the blog
 
-Add additional notes about how to deploy this on a live system
+The first time you run the blog, make sure your database is correctly set. On the home page, click the button "Take a fresh start!"
+You can then enter verbs or go test. Once you are done, go to statistics. Your can then save your results to take a new test. 
+Your new score will appear on the line chart in the front page. 
 
 ## Built With
 
