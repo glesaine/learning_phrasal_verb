@@ -34,19 +34,22 @@ def home(request,truth=False):
     cursor=connection.cursor()
     button_delete = Button(request.POST or None)
     if button_delete.is_valid():
+        print(1)
         cursor.execute('DELETE FROM blog_error')
+        cursor.execute('DELETE FROM blog_datereport')
         for p in Verb.objects.raw('SELECT id FROM blog_verb ORDER BY attempts DESC'):
             p.proposition=''
             p.attempts=0
             p.save()
+        button_delete=Button()
     for p in DateReport.objects.raw('SELECT id FROM blog_datereport'):
         xy=(p.date,p.success_ratio)
         l.append(xy)
     #print(L)
 
-    if Error.objects.order_by('-attempts'):
+    if DateReport.objects.order_by('-date'):
         truth=True
-        verb_to_learn=Error.objects.order_by('-attempts')[0]
+        verb_to_learn=DateReport.objects.order_by('-date')[0]
         phrasal_verb_to_learn=verb_to_learn.phrasal_verb
         meaning_to_learn=verb_to_learn.meaning
         example_to_learn=verb_to_learn.example
@@ -113,7 +116,7 @@ def statistics(request):
     L=[]
     l=[]
     cursor=connection.cursor()
-    button= Button(request.POST or None)
+    button = Button(request.POST or None)
     errors={'a':0,'b':0,'c':0,'d':0,'e':0,'f':0,'g':0,'h':0,'i':0,'j':0,'k':0,'l':0,'m':0,'n':0,'o':0,'p':0,'q':0,'r':0,'s':0,'t':0,'u':0,'v':0,'w':0,'x':0,'y':0,'z':0}
     total_verbs = Verb.objects.filter(attempts=1).count()
     failed_attempts=0
@@ -132,8 +135,14 @@ def statistics(request):
     for letter in errors:
         l.append((letter,errors[letter]))
     if button.is_valid() and Error.objects.order_by('-attempts'):
-        date=DateReport.objects.order_by('-date')[0].date+1
-        report=DateReport(success_ratio=success_ratio,date=date)
+        if DateReport.objects.order_by('-success_ratio'):
+            date=DateReport.objects.order_by('-date')[0].date+1
+            phrasal_verb=Error.objects.order_by('-attempts')[0].phrasal_verb
+            meaning=Error.objects.order_by('-attempts')[0].meaning
+            example=Error.objects.order_by('-attempts')[0].example
+        else :
+            date=1
+        report=DateReport(success_ratio=success_ratio,date=date,phrasal_verb=phrasal_verb,meaning=meaning,example=example)
         report.save()
         for p in Verb.objects.raw('SELECT id FROM blog_verb ORDER BY attempts DESC'):
             p.proposition=''

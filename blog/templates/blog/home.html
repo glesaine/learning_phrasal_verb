@@ -5,12 +5,14 @@
 
 <script src="http://d3js.org/d3.v3.js"></script>
 
+
+
 <body>
     <div id="title">
       <h1> Welcome! </h1>
     </div>
     <div id="chart">
-      <div class="title"> Scores in last tests </div>
+      <div class="title"> Score of the last tests </div>
     </div>
 </body>
 
@@ -127,12 +129,13 @@
 </body>
 <br>
 <body>
-  This blog will help you learn english phrasal verbs. <br>
-  You can go to test or enter new verbs. Once the test is over you can go to a statistics page.<br>
+  This blog will help your learn english phrasal verbs <br>
+  You can enter new verbs or go directly to the test page. When you are done, go to the statistics page and save your results.<br>
+  The next time your will use the blog, the upper line chart will be updated and the word you need to improve the most shown below.<br>
 </body>
 <p>
 
-{% if truth %} Le verbe ayant posé problème la dernière fois est : <br>
+{% if truth %} Last time you did the test you had a problem with this verb: <br>
 <h2>{{phrasal_verb_to_learn}} | {{meaning_to_learn}} | {{example_to_learn}}</h2>{% endif %}
 
 <p>
@@ -143,5 +146,5 @@ Go to test <a href='/blog/ask_verbs/85/to accept a decision/'>Clic here</a><br>
 <form action= "/blog/" method="post">
   {% csrf_token %}
   {{ button_delete.as_p }}
-  <input type="submit" value="Delete records" />
+  <input type="submit" value="Take a fresh start!" />
 </form>

@@ -25,7 +25,9 @@ class DateReport(models.Model):
     id = models.AutoField(primary_key=True)
     success_ratio = models.IntegerField(default=0)
     date = models.IntegerField(default=0)
-
+    phrasal_verb = models.CharField(max_length=100,default='')
+    meaning = models.CharField(max_length=100,default='')
+    example = models.CharField(max_length=100,default='')
 
 # class Proposition(models.Model):
 #     id = models.AutoField(primary_key=True)
